@@ -1,0 +1,73 @@
+{
+  "name": "backapi",
+  "productName": "backAPI",
+  "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A simple API framework using Flexible Persistence",
+  "main": "dist/source/index.js",
+  "module": "dist/source/index.js",
+  "types": "dist/source/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "api",
+    "api-framework",
+    "nodejs",
+    "typescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Judahh/back.git"
+  },
+  "homepage": "https://github.com/Judahh/back#readme",
+  "license": "MIT",
+  "config": {
+    "jest": "--coverage --passWithNoTests --ci --verbose --forceExit --detectOpenHandles --colors",
+    "integration_config": "-i -c integration.config.json",
+    "unit_coverall": "tests/unit/coverage/lcov.info",
+    "integration_coverall": "tests/integration/coverage/lcov.info",
+    "path_dist": "dist",
+    "path_source": "source",
+    "path_server": "source/server"
+  },
+  "scripts": {
+    "postinstall": "",
+    "prepublish": "",
+    "build": "rm -rf dist/ && tsc",
+    "test": "jest --passWithNoTests --ci --verbose --forceExit --detectOpenHandles",
+    "integration": "jest -i -c integration.config.json --passWithNoTests  --ci --verbose --forceExit --detectOpenHandles",
+    "start": "node dist/source/server.js",
+    "prestart": "",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
+  },
+  "dependencies": {
+    "@flexiblepersistence/default-initializer": "latest",
+    "@flexiblepersistence/service": "latest",
+    "pg": "latest",
+    "flexiblepersistence": "latest",
+    "journaly": "latest",
+    "ts-mixer": "latest"
+  },
+  "devDependencies": {
+    "@flexiblepersistence/sequelize": "latest",
+    "@flexiblepersistence/dao": "latest",
+    "sequelize": "latest",
+    "@types/jest": "latest",
+    "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-filenames": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-prettier": "latest",
+    "jest": "latest",
+    "prettier": "latest",
+    "ts-jest": "latest",
+    "typescript": "latest"
+  }
+}
