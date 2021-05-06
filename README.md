@@ -1,8 +1,8 @@
 # backAPI
 
-![Publish](https://github.com/Judahh/backAPIRest/workflows/Publish/badge.svg)
-[![npm version](https://badge.fury.io/js/backapirest.svg)](https://badge.fury.io/js/backapirest)
-[![npm downloads](https://img.shields.io/npm/dt/backapirest.svg)](https://img.shields.io/npm/dt/backapirest.svg)
+![Publish](https://github.com/Judahh/backAPI/workflows/Publish/badge.svg)
+[![npm version](https://badge.fury.io/js/backapi.svg)](https://badge.fury.io/js/backapi)
+[![npm downloads](https://img.shields.io/npm/dt/backapi.svg)](https://img.shields.io/npm/dt/backapi.svg)
 
 A simple API framework using Flexible Persistence
 
@@ -54,13 +54,13 @@ Installation is done using the
 or [`yarn add` command](https://classic.yarnpkg.com/en/docs/cli/add):
 
 ```bash
-$ npm install backAPIRest
+$ npm install backAPI
 ```
 
 or
 
 ```bash
-$ yarn add backAPIRest
+$ yarn add backAPI
 ```
 
 ## Tests
@@ -84,6 +84,6 @@ $ yarn test
 
 ## People
 
-The original author of backAPIRest is [Judah Lima](https://github.com/Judahh)
+The original author of backAPI is [Judah Lima](https://github.com/Judahh)
 
-[List of all contributors](https://github.com/Judahh/backAPIRest/graphs/contributors)
+[List of all contributors](https://github.com/Judahh/backAPI/graphs/contributors)
