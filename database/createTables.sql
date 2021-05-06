@@ -3,4 +3,3 @@ CREATE TABLE IF NOT EXISTS Tests (
         name VARCHAR(100),
         CONSTRAINT Tests_PK PRIMARY KEY (id)
 );
-
