@@ -10,6 +10,7 @@ import { eventInfo, readInfo } from './databaseInfos';
 import { ServiceHandler } from '@flexiblepersistence/service';
 import { DAODB } from '@flexiblepersistence/dao';
 import { Journaly, SenderReceiver } from 'journaly';
+import { Postgres } from '@flexiblepersistence/dao';
 
 class DBHandler extends DatabaseHandler {
   // async migrate(): Promise<boolean> {
@@ -51,8 +52,9 @@ class DBHandler extends DatabaseHandler {
 const journaly = Journaly.newJournaly() as SenderReceiver<any>;
 const database = new PersistenceInfo(readInfo, journaly);
 const eventdatabase = new PersistenceInfo(eventInfo, journaly);
+const pool = new Postgres(database);
 
-const dAO = new DAODB(database, {
+const dAO = new DAODB(pool, {
   test: new TestDAO(),
 });
 
