@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // file deepcode ignore no-any: any needed
-import { Handler, PersistenceAdapter } from 'flexiblepersistence';
+import { Handler, IPersistence } from 'flexiblepersistence';
 import { SenderReceiver } from 'journaly';
-import DatabaseHandlerInitializer from './databaseHandlerInitializer';
+import IDatabaseHandler from './iDatabaseHandler';
 // @ts-ignore
 export default abstract class DatabaseHandler {
   // @ts-ignore
-  protected init?: DatabaseHandlerInitializer;
+  protected init?: IDatabaseHandler;
 
   getJournaly(): SenderReceiver<any> {
     if (this.init && this.init.journaly) return this.init.journaly;
@@ -21,16 +21,16 @@ export default abstract class DatabaseHandler {
 
   protected static _instance: DatabaseHandler;
 
-  protected constructor(init?: DatabaseHandlerInitializer) {
+  protected constructor(init?: IDatabaseHandler) {
     this.init = init;
   }
 
-  getInit(): DatabaseHandlerInitializer {
+  getInit(): IDatabaseHandler {
     if (this.init) return this.init;
     throw new Error('DatabaseHandler must have a init.');
   }
 
-  getReadHandler(): PersistenceAdapter {
+  getReadHandler(): IPersistence {
     const handler = this.getHandler();
     if (handler) {
       const write = handler.getWrite();
@@ -42,7 +42,7 @@ export default abstract class DatabaseHandler {
     throw new Error('DatabaseHandler must have a ReadDB.');
   }
 
-  static getInstance(init?: DatabaseHandlerInitializer): DatabaseHandler {
+  static getInstance(init?: IDatabaseHandler): DatabaseHandler {
     if (!this._instance) {
       // @ts-ignore
       this._instance = new this(init);

@@ -2,7 +2,7 @@
   "name": "backapi",
   "productName": "backAPI",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "private": false,
   "description": "A simple API framework using Flexible Persistence",
   "main": "dist/source/index.js",

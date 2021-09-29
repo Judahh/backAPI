@@ -2,19 +2,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // file deepcode ignore no-any: any needed
 // file deepcode ignore object-literal-shorthand: argh
-import { Handler, MongoDB, PersistenceInfo } from 'flexiblepersistence';
+import {
+  Handler,
+  MongoPersistence,
+  PersistenceInfo,
+} from 'flexiblepersistence';
 import { DatabaseHandler } from '../../source/index';
 import TestService from './testService';
 import { eventInfo, readInfo } from './databaseInfos';
 import { ServiceHandler } from '@flexiblepersistence/service';
 import TestModel from './testModel';
 import {
-  SequelizeDB,
+  SequelizePersistence,
   SequelizePersistenceInfo,
 } from '@flexiblepersistence/sequelize';
 import { Journaly, SenderReceiver } from 'journaly';
 
-class DBHandler extends DatabaseHandler {
+class PersistenceHandler extends DatabaseHandler {
   // async migrate(): Promise<boolean> {
   //   try {
   //     const events = await this.handler.readArray('events', {});
@@ -57,7 +61,7 @@ const database = new SequelizePersistenceInfo(readInfo, journaly, {
 });
 const eventdatabase = new PersistenceInfo(eventInfo, journaly);
 
-const sequelize = new SequelizeDB(database, { test: new TestModel() });
+const sequelize = new SequelizePersistence(database, { test: new TestModel() });
 
 const read = new ServiceHandler(
   database,
@@ -66,10 +70,10 @@ const read = new ServiceHandler(
   },
   sequelize
 );
-const write = new MongoDB(eventdatabase);
+const write = new MongoPersistence(eventdatabase);
 // console.log(journaly.getSubjects());
 const handler = new Handler(write, read);
-export default DBHandler.getInstance({
+export default PersistenceHandler.getInstance({
   handler: handler,
   journaly: journaly,
-}) as DBHandler;
+}) as PersistenceHandler;
