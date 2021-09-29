@@ -2,8 +2,8 @@ import { Mixin } from 'ts-mixer';
 
 import BasicService from './service/basicService';
 import DatabaseHandler from './database/databaseHandler';
-import DatabaseHandlerInitializer from './database/databaseHandlerInitializer';
-import RouterInitializer from './router/routerInitializer';
+import IDatabaseHandler from './database/iDatabaseHandler';
+import IRouter from './router/iRouter';
 
 export { DatabaseHandler, BasicService, Mixin };
-export type { RouterInitializer, DatabaseHandlerInitializer };
+export type { IRouter, IDatabaseHandler };
