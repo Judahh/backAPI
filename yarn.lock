@@ -326,9 +326,9 @@
     strip-json-comments "^3.1.1"
 
 "@flexiblepersistence/dao@latest":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@flexiblepersistence/dao/-/dao-1.0.1.tgz#de37e9d20b13175d15b124801e855404a0544395"
-  integrity sha512-ka7ff2YURmj4m5RWkgjxyDzLFMDl4BDJ89U3MfvNNULqW8VsWNgl3TbFBuysyu+I7HIsGLCV4vicYuEfjD5niA==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@flexiblepersistence/dao/-/dao-1.0.2.tgz#2ee311fa2713c40242012cbfb38f1061e2569dbf"
+  integrity sha512-lFZGVKWhq4a4uGKEvU1iQLQHwIUnVO3gc9gEwz6v6SQ2jdW+y6kuC1bcQlE98WFQTBwxVfTl5Baz0ILKaAeW7w==
   dependencies:
     bignumber.js latest
     journaly latest
@@ -336,17 +336,17 @@
     ts-mixer latest
 
 "@flexiblepersistence/default-initializer@latest":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@flexiblepersistence/default-initializer/-/default-initializer-1.0.1.tgz#4431bf0c1f42b7cfa259c344e48a925ffa42cdbb"
-  integrity sha512-e5i9Z18La1Ev/6msWG+ygZn4Tzf+V6Qk7J12x7+sa1kYk9I1VtA3iszvxgOjUKgPOjd+VY2lRBmNJAG6AC9pIg==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@flexiblepersistence/default-initializer/-/default-initializer-1.0.2.tgz#ff662c227ad1aec0112c789cc0aaee1da4c581bc"
+  integrity sha512-I62aJ0sRIeXJ92v5zaHiFq+FInhdK7g00nJ5mRH4AgwfSynVamHmL9itpRP8PtT2Zbi8NjzrT9RlyzVJ4aj1Ng==
   dependencies:
     journaly latest
     ts-mixer latest
 
 "@flexiblepersistence/sequelize@latest":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@flexiblepersistence/sequelize/-/sequelize-1.0.0.tgz#023270333c1813a039ec99b79229714dc4c8d1db"
-  integrity sha512-c6tweuxWw193yvOKPZcuuL8m+VXhc743nQO1cXvZ5GQiHP8S9hfL79n5FjXgMlDFMJEqeRbiRz6bbCL+YC0P2w==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@flexiblepersistence/sequelize/-/sequelize-1.0.1.tgz#b888f6f12e17c5821cf53f18ba9e7d8a3e5883d7"
+  integrity sha512-W9tCGeXYhkjtRqfJOjBANzecfqwpDbF2cHfowUZH/6C/5nuPZgYeJhVLWrhZZvBzPPS4t+7mIKtctM3VL2Jx2Q==
   dependencies:
     journaly latest
     pg latest
@@ -354,9 +354,9 @@
     ts-mixer latest
 
 "@flexiblepersistence/service@latest":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@flexiblepersistence/service/-/service-1.0.1.tgz#d4722d4bb310dbcd87f95722dd9dbd35cd64c2fd"
-  integrity sha512-f9n8TLY35cNWqToRDWrIvt0GwgTD0oqFZ0GVITmmBFJ26IoZCwlaVqHZKV/TaI5inGLmFPuUXioBu3ARE2SbRg==
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@flexiblepersistence/service/-/service-1.0.2.tgz#ed353acefb7adc09a12df9aac7cd409c375d3094"
+  integrity sha512-sFkV+iwSWmgF+i+GQzWZvJDCaGNexrkRFHvxgcz/oJvbJuN3q/2TGg0OIVc4z+ILYUwL3n5sRNDlezNKX/Pssg==
   dependencies:
     journaly latest
     ts-mixer latest
@@ -562,10 +562,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@jest/types@^27.2.3":
-  version "27.2.3"
-  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.2.3.tgz#e0242545f442242c2538656d947a147443eee8f2"
-  integrity sha512-UJMDg90+W2i/QsS1NIN6Go8O/rSHLFWUkofGqKsUQs54mhmCVyLTiDy1cwKhoNO5fpmr9fctm9L/bRp/YzA1uQ==
+"@jest/types@^27.2.4":
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.2.4.tgz#2430042a66e00dc5b140c3636f4474d464c21ee8"
+  integrity sha512-IDO2ezTxeMvQAHxzG/ZvEyA47q0aVfzT95rGFl7bZs/Go0aIucvfDbS2rmnoEdXxlLQhcolmoG/wvL/uKx4tKA==
   dependencies:
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^3.0.0"
@@ -691,9 +691,9 @@
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
 "@types/node@*", "@types/node@latest":
-  version "16.10.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.1.tgz#f3647623199ca920960006b3dccf633ea905f243"
-  integrity sha512-4/Z9DMPKFexZj/Gn3LylFgamNKHm4K3QDi0gz9B26Uk0c8izYf97B5fxfpspMNkWlFupblKM/nV8+NA9Ffvr+w==
+  version "16.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.2.tgz#5764ca9aa94470adb4e1185fe2e9f19458992b2e"
+  integrity sha512-zCclL4/rx+W5SQTzFs9wyvvyCwoK9QtBpratqz2IYJ3O8Umrn0m3nsTv0wQBk9sRGpvUe9CwPDrQFB10f1FIjQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -1998,9 +1998,9 @@ flatted@^3.1.0:
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
 flexiblepersistence@latest:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/flexiblepersistence/-/flexiblepersistence-2.0.1.tgz#7e3baa4ececb260f906313cc4ec0230bec8285cd"
-  integrity sha512-Cr/dVmqQx2GCtXyzR5RapqLbX8CdDRJ5n856ikZKuftNy//OwkEiQF+yXYibVrPJN5c9IA0sBLyDPmV3JKSOPA==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/flexiblepersistence/-/flexiblepersistence-2.0.2.tgz#9b2542936d4eab4e5fa4b5d76743c44f68b24983"
+  integrity sha512-smo7WA32rNQu3AOMjWz/2Lv685weWLUspQ0xkBNTDuSwSuJVQBwp5yBbP/5LrhSiCBJ1IRgdWHNssBq7VgnsIw==
   dependencies:
     "@flexiblepersistence/default-initializer" latest
     journaly latest
@@ -2456,9 +2456,9 @@ is-generator-fn@^2.0.0:
   integrity sha512-cTIB4yPYL/Grw0EaSzASzg6bBy9gqCofvWN8okThAYIxKJZC+udlRAmGbM0XLeniEJSs8uEgHPGuHSe1XsOLSQ==
 
 is-glob@^4.0.0, is-glob@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/is-glob/-/is-glob-4.0.2.tgz#859fc2e731e58c902f99fcabccb75a7dd07d29d8"
-  integrity sha512-ZZTOjRcDjuAAAv2cTBQP/lL59ZTArx77+7UzHdWW/XB1mrfp7DEaVpKmZ0XIzx+M7AxfhKcqV+nMetUQmFifwg==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/is-glob/-/is-glob-4.0.3.tgz#64f61e42cbbb2eec2071a9dac0b28ba1e65d5084"
+  integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
   dependencies:
     is-extglob "^2.1.1"
 
@@ -2673,14 +2673,14 @@ jest-diff@^26.6.2:
     pretty-format "^26.6.2"
 
 jest-diff@^27.0.0:
-  version "27.2.3"
-  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.2.3.tgz#4298ecc53f7476571d0625e8fda3ade13607a864"
-  integrity sha512-ihRKT1mbm/Lw+vaB1un4BEof3WdfYIXT0VLvEyLUTU3XbIUgyiljis3YzFf2RFn+ECFAeyilqJa35DeeRV2NeQ==
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.2.4.tgz#171c51d3d2c105c457100fee6e7bf7cee51c8d8c"
+  integrity sha512-bLAVlDSCR3gqUPGv+4nzVpEXGsHh98HjUL7Vb2hVyyuBDoQmja8eJb0imUABsuxBeUVmf47taJSAd9nDrwWKEg==
   dependencies:
     chalk "^4.0.0"
     diff-sequences "^27.0.6"
     jest-get-type "^27.0.6"
-    pretty-format "^27.2.3"
+    pretty-format "^27.2.4"
 
 jest-docblock@^26.0.0:
   version "26.0.0"
@@ -3883,12 +3883,12 @@ pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-pretty-format@^27.0.0, pretty-format@^27.2.3:
-  version "27.2.3"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.3.tgz#c76710de6ebd8b1b412a5668bacf4a6c2f21a029"
-  integrity sha512-wvg2HzuGKKEE/nKY4VdQ/LM8w8pRZvp0XpqhwgaZBbjTwd5UdF2I4wvwZjyUwu8G+HI6g4t6u9b2FZlKhlzxcQ==
+pretty-format@^27.0.0, pretty-format@^27.2.4:
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.4.tgz#08ea39c5eab41b082852d7093059a091f6ddc748"
+  integrity sha512-NUjw22WJHldzxyps2YjLZkUj6q1HvjqFezkB9Y2cklN8NtVZN/kZEXGZdFw4uny3oENzV5EEMESrkI0YDUH8vg==
   dependencies:
-    "@jest/types" "^27.2.3"
+    "@jest/types" "^27.2.4"
     ansi-regex "^5.0.1"
     ansi-styles "^5.0.0"
     react-is "^17.0.1"
