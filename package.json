@@ -2,7 +2,7 @@
   "name": "backapi",
   "productName": "backAPI",
   "author": "Judah Holanda Correia Lima <judahholanda7@gmail.com> (https://judahh.com)",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "A simple API framework using Flexible Persistence",
   "main": "dist/source/index.js",
@@ -47,10 +47,8 @@
   "dependencies": {
     "@flexiblepersistence/default-initializer": "latest",
     "@flexiblepersistence/service": "latest",
-    "pg": "latest",
     "flexiblepersistence": "latest",
-    "journaly": "latest",
-    "ts-mixer": "latest"
+    "journaly": "latest"
   },
   "devDependencies": {
     "@flexiblepersistence/sequelize": "latest",
