@@ -48,6 +48,7 @@
     "@flexiblepersistence/default-initializer": "latest",
     "@flexiblepersistence/service": "latest",
     "flexiblepersistence": "latest",
+    "ts-mixer": "latest",
     "journaly": "latest"
   },
   "devDependencies": {

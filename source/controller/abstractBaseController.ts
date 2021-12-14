@@ -9,6 +9,8 @@ import { IService, IServiceSimple } from '@flexiblepersistence/service';
 import { Handler, Event, Operation } from 'flexiblepersistence';
 import IRouter from '../router/iRouter';
 import MissingMethodError from '../error/missingMethodError';
+import { settings } from 'ts-mixer';
+settings.initFunction = 'init';
 
 export default abstract class AbstractBaseController extends Default {
   protected server;
