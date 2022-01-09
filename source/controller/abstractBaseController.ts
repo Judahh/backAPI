@@ -201,15 +201,14 @@ export default abstract class AbstractBaseController extends Default {
 
   formatBoolean(name: string, headers?, defaultValue?: boolean): boolean {
     let content = headers ? headers[name] : undefined;
-    content = typeof content === 'string' && content.toLowerCase();
-    content =
-      content === 'true' ||
-      content === '1' ||
-      content === 1 ||
-      content === true ||
-      content;
-    if (defaultValue !== undefined && content === undefined)
-      content = defaultValue;
+    if (content !== undefined) {
+      content = typeof content === 'string' && content.toLowerCase();
+      content =
+        content === 'true' ||
+        content === '1' ||
+        content === 1 ||
+        content === true;
+    } else content = defaultValue;
     return content;
   }
 
