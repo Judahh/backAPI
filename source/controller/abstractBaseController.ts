@@ -44,6 +44,7 @@ export default abstract class AbstractBaseController extends Default {
     HEAD: 'head',
     TRACE: 'trace',
   };
+
   // @ts-ignore
   protected handler: Handler | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -198,36 +199,18 @@ export default abstract class AbstractBaseController extends Default {
     return query;
   }
 
-  formatBoolean(name: string, headers?): boolean {
-    let content = headers[name];
+  formatBoolean(name: string, headers?, defaultValue?: boolean): boolean {
+    let content = headers ? headers[name] : undefined;
     content = typeof content === 'string' && content.toLowerCase();
     content =
       content === 'true' ||
       content === '1' ||
       content === 1 ||
-      content === true;
+      content === true ||
+      content;
+    if (defaultValue !== undefined && content === undefined)
+      content = defaultValue;
     return content;
-  }
-
-  formatSingle(headers?, singleDefault?: boolean) {
-    //  deepcode ignore HTTPSourceWithUncheckedType: params do not exist on next
-    let single;
-    if (headers && headers.single !== undefined && headers.single !== null) {
-      if (
-        typeof headers.single === 'string' ||
-        headers.single instanceof String
-      ) {
-        headers.single =
-          headers.single.toLowerCase() === 'true' ||
-          headers.single.toLowerCase() === '1';
-      } else {
-        headers.single = headers.single === true || headers.single === 1;
-      }
-      single = headers.single as boolean;
-    }
-    if (singleDefault !== undefined && single === undefined)
-      single = singleDefault;
-    return single;
   }
 
   formatSelection(params?, query?) {
@@ -261,13 +244,17 @@ export default abstract class AbstractBaseController extends Default {
     }
     const event = new Event({
       operation,
-      single: this.formatSingle(requestOrData?.headers, singleDefault),
+      single: this.formatBoolean(
+        'single',
+        requestOrData?.headers,
+        singleDefault
+      ),
       content: this.formatContent(requestOrData),
       selection: this.formatSelection(params, this.formatQuery(requestOrData)),
       name,
       options: requestOrData.headers,
-      correct: this.formatBoolean('correct', requestOrData.headers),
-      replace: this.formatBoolean('replace', requestOrData.headers),
+      correct: this.formatBoolean('correct', requestOrData?.headers),
+      replace: this.formatBoolean('replace', requestOrData?.headers),
     });
     requestOrData['event'] = {
       operation,
