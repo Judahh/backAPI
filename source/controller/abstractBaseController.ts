@@ -198,21 +198,32 @@ export default abstract class AbstractBaseController extends Default {
     return query;
   }
 
-  formatSingle(params?, singleDefault?: boolean) {
+  formatBoolean(name: string, headers?): boolean {
+    let content = headers[name];
+    content = typeof content === 'string' && content.toLowerCase();
+    content =
+      content === 'true' ||
+      content === '1' ||
+      content === 1 ||
+      content === true;
+    return content;
+  }
+
+  formatSingle(headers?, singleDefault?: boolean) {
     //  deepcode ignore HTTPSourceWithUncheckedType: params do not exist on next
     let single;
-    if (params && params.single !== undefined && params.single !== null) {
+    if (headers && headers.single !== undefined && headers.single !== null) {
       if (
-        typeof params.single === 'string' ||
-        params.single instanceof String
+        typeof headers.single === 'string' ||
+        headers.single instanceof String
       ) {
-        params.single =
-          params.single.toLowerCase() === 'true' ||
-          params.single.toLowerCase() === '1';
+        headers.single =
+          headers.single.toLowerCase() === 'true' ||
+          headers.single.toLowerCase() === '1';
       } else {
-        params.single = params.single === true || params.single === 1;
+        headers.single = headers.single === true || headers.single === 1;
       }
-      single = params.single as boolean;
+      single = headers.single as boolean;
     }
     if (singleDefault !== undefined && single === undefined)
       single = singleDefault;
@@ -250,14 +261,13 @@ export default abstract class AbstractBaseController extends Default {
     }
     const event = new Event({
       operation,
-      single: this.formatSingle(
-        requestOrData?.headers || params,
-        singleDefault
-      ),
+      single: this.formatSingle(requestOrData?.headers, singleDefault),
       content: this.formatContent(requestOrData),
       selection: this.formatSelection(params, this.formatQuery(requestOrData)),
       name,
       options: requestOrData.headers,
+      correct: this.formatBoolean('correct', requestOrData.headers),
+      replace: this.formatBoolean('replace', requestOrData.headers),
     });
     requestOrData['event'] = {
       operation,
@@ -265,13 +275,17 @@ export default abstract class AbstractBaseController extends Default {
     };
     return event;
   }
-  protected generateStatus(operation: Operation, object): number {
+  protected generateStatus(
+    operation: Operation,
+    object,
+    correct?: boolean
+  ): number {
     const resultObject = this.getObject(object);
     switch (operation) {
       case Operation.create:
         return 201;
-      case Operation.nonexistent:
-        return 410;
+      case Operation.delete:
+        if (correct) return 410;
       default:
         if (
           resultObject === undefined ||
@@ -306,6 +320,45 @@ export default abstract class AbstractBaseController extends Default {
         responseOrSocket.setHeader('numberOfPages', numberOfPages);
     }
   }
+
+  protected async enableOptions(
+    request: { method?: string },
+    responseOrSocket,
+    operation: Operation
+  ): Promise<boolean> {
+    if (
+      request.method?.toLowerCase() === 'options' ||
+      request.method?.toLowerCase() === 'option'
+    ) {
+      if (
+        process.env.CORS_ENABLED?.toLocaleLowerCase() === 'true' ||
+        process.env.ALLOWED_ORIGIN === '*'
+      ) {
+        responseOrSocket.setHeader('Access-Control-Allow-Origin', '*');
+        responseOrSocket.setHeader('Access-Control-Allow-Credentials', 'true');
+        responseOrSocket.setHeader(
+          'Access-Control-Allow-Methods',
+          'GET,HEAD,OPTIONS,POST,PUT'
+        );
+        responseOrSocket.setHeader(
+          'Access-Control-Allow-Headers',
+          process.env.ALLOWED_HEADERS
+            ? process.env.ALLOWED_HEADERS
+            : 'Access-Control-Allow-Headers, Origin, Accept, ' +
+                'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
+                'Authorization, authorization, Access-Control-Allow-Origin, ' +
+                'pages, page, pageSize, numberOfPages, pagesize, numberofpages, pageNumber, ' +
+                'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
+                'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
+                'correct, replace, id, name, description, createdAt, updatedAt'
+        );
+      }
+      await this.emit(responseOrSocket, operation, 200, {});
+      return true;
+    }
+    return false;
+  }
+
   protected async generateEvent(
     requestOrData,
     responseOrSocket,
@@ -317,6 +370,11 @@ export default abstract class AbstractBaseController extends Default {
     singleDefault?: boolean
   ): Promise<Response | any> {
     try {
+      if (
+        await this.enableOptions(requestOrData, responseOrSocket, operation)
+      ) {
+        return responseOrSocket;
+      }
       const event = this.formatEvent(requestOrData, operation, singleDefault);
       await this.runMiddlewares(requestOrData, responseOrSocket);
       const object = await this.generateObject(useFunction, event);

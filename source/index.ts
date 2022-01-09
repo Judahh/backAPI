@@ -4,10 +4,5 @@ import IDatabaseHandler from './database/iDatabaseHandler';
 import MissingMethodError from './error/missingMethodError';
 import IRouter from './router/iRouter';
 
-export { DatabaseHandler };
-export type {
-  IRouter,
-  IDatabaseHandler,
-  AbstractBaseController,
-  MissingMethodError,
-};
+export { DatabaseHandler, AbstractBaseController, MissingMethodError };
+export type { IRouter, IDatabaseHandler };
