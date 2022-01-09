@@ -12,7 +12,8 @@ import TestService from './testService';
 import TestDAO from './testDAO';
 import { eventInfo, readInfo } from './databaseInfos';
 import { ServiceHandler } from '@flexiblepersistence/service';
-import { DAOPersistence, Postgres } from '@flexiblepersistence/dao';
+import { DAOPersistence } from '@flexiblepersistence/dao';
+import { PGSQL } from '@flexiblepersistence/pgsql';
 import { Journaly, SenderReceiver } from 'journaly';
 
 class PersistenceHandler extends DatabaseHandler {
@@ -55,7 +56,7 @@ class PersistenceHandler extends DatabaseHandler {
 const journaly = Journaly.newJournaly() as SenderReceiver<any>;
 const database = new PersistenceInfo(readInfo, journaly);
 const eventdatabase = new PersistenceInfo(eventInfo, journaly);
-const pool = new Postgres(database);
+const pool = new PGSQL(database);
 
 const dAO = new DAOPersistence(pool, {
   test: new TestDAO(),
