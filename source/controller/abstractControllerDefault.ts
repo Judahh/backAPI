@@ -52,7 +52,7 @@ export default abstract class AbstractControllerDefault extends Default {
   async mainRequestHandler(
     requestOrData: Request | any,
     responseOrSocket: Response | any,
-    operation: Operation
+    operation?: Operation
   ): Promise<Response> {
     try {
       let response;
@@ -137,10 +137,10 @@ export default abstract class AbstractControllerDefault extends Default {
   }
 
   protected abstract emit(
-    responseOrSocket,
-    operation: Operation,
-    status,
-    object
+    responseOrSocket?,
+    operation?: Operation,
+    status?,
+    object?
   ): Promise<void>;
 
   protected async generateError(responseOrSocket, error, operation: Operation) {
