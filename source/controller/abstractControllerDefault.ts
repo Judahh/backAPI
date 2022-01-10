@@ -12,7 +12,7 @@ import MissingMethodError from '../error/missingMethodError';
 import { settings } from 'ts-mixer';
 settings.initFunction = 'init';
 
-export default abstract class AbstractBaseController extends Default {
+export default abstract class AbstractControllerDefault extends Default {
   protected server;
   protected regularErrorStatus: {
     [error: string]: number;
@@ -36,7 +36,7 @@ export default abstract class AbstractBaseController extends Default {
   } = {
     GET: 'read',
     POST: 'store',
-    PUT: 'forceUpdate',
+    PUT: 'replaceUpdate',
     PATCH: 'update',
     DELETE: 'delete',
     OPTIONS: 'options',
@@ -231,7 +231,12 @@ export default abstract class AbstractBaseController extends Default {
     return selection;
   }
 
-  formatEvent(requestOrData, operation: Operation, singleDefault?: boolean) {
+  formatEvent(
+    requestOrData,
+    operation: Operation,
+    singleDefault?: boolean,
+    replace?: boolean
+  ) {
     const params = this.formatParams(requestOrData);
     const name = this.formatName();
     if (requestOrData?.headers) {
@@ -253,7 +258,7 @@ export default abstract class AbstractBaseController extends Default {
       name,
       options: requestOrData.headers,
       correct: this.formatBoolean('correct', requestOrData?.headers),
-      replace: this.formatBoolean('replace', requestOrData?.headers),
+      replace: this.formatBoolean('replace', requestOrData?.headers) || replace,
     });
     requestOrData['event'] = {
       operation,
@@ -353,7 +358,8 @@ export default abstract class AbstractBaseController extends Default {
       // eslint-disable-next-line no-unused-vars
       event: Event
     ) => Promise<IService[] | IService | number | boolean>,
-    singleDefault?: boolean
+    singleDefault?: boolean,
+    replace?: boolean
   ): Promise<Response | any> {
     try {
       if (
@@ -361,7 +367,12 @@ export default abstract class AbstractBaseController extends Default {
       ) {
         return responseOrSocket;
       }
-      const event = this.formatEvent(requestOrData, operation, singleDefault);
+      const event = this.formatEvent(
+        requestOrData,
+        operation,
+        singleDefault,
+        replace
+      );
       await this.runMiddlewares(requestOrData, responseOrSocket);
       const object = await this.generateObject(useFunction, event);
       const status = this.generateStatus(operation, object);
@@ -372,5 +383,14 @@ export default abstract class AbstractBaseController extends Default {
       console.error(error);
       return this.generateError(responseOrSocket, error, operation);
     }
+  }
+
+  async options(requestOrData, responseOrSocket): Promise<Response> {
+    return this.generateEvent(
+      requestOrData,
+      responseOrSocket,
+      Operation.other,
+      this.event.bind(this)
+    );
   }
 }
