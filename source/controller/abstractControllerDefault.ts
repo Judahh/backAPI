@@ -143,7 +143,11 @@ export default abstract class AbstractControllerDefault extends Default {
     object?
   ): Promise<void>;
 
-  protected async generateError(responseOrSocket, error, operation: Operation) {
+  protected async generateError(
+    responseOrSocket,
+    error,
+    operation?: Operation
+  ) {
     if (error === undefined) error = new MissingMethodError();
     if ((error.message as string).includes('does not exist'))
       error.name = 'NotFound';
