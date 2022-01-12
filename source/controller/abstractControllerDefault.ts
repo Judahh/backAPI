@@ -34,10 +34,10 @@ export default abstract class AbstractControllerDefault extends Default {
   protected method: {
     [method: string]: string;
   } = {
+    POST: 'create',
     GET: 'read',
-    POST: 'store',
-    PUT: 'replaceUpdate',
     PATCH: 'update',
+    PUT: 'replaceUpdate',
     DELETE: 'delete',
     OPTIONS: 'options',
     CONNECT: 'connect',
