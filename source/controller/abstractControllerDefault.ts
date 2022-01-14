@@ -246,7 +246,8 @@ export default abstract class AbstractControllerDefault extends Default {
     if (requestOrData?.headers) {
       requestOrData.headers.pageSize =
         requestOrData.headers.pageSize || requestOrData.headers.pagesize;
-      requestOrData.headers.numberOfPages =
+      requestOrData.headers.pages =
+        requestOrData.headers.pages ||
         requestOrData.headers.numberOfPages ||
         requestOrData.headers.numberofpages;
     }
@@ -322,34 +323,44 @@ export default abstract class AbstractControllerDefault extends Default {
     operation: Operation
   ): Promise<boolean> {
     if (
-      request.method?.toLowerCase() === 'options' ||
-      request.method?.toLowerCase() === 'option'
+      process.env.CORS_ENABLED?.toLocaleLowerCase() === 'true' ||
+      process.env.ALLOWED_ORIGIN === '*'
     ) {
+      console.log('CORS enabled');
+      responseOrSocket.setHeader('Access-Control-Allow-Origin', '*');
+      responseOrSocket.setHeader('Access-Control-Allow-Credentials', 'true');
+      responseOrSocket.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET,HEAD,OPTIONS,POST,PUT,PATCH'
+      );
+      const exposedHeaders =
+        'Access-Control-Allow-Headers, Origin, Accept, ' +
+        'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
+        'Authorization, authorization, Access-Control-Allow-Origin, ' +
+        'pages, page, pageSize, numberOfPages, pagesize, numberofpages, pageNumber, ' +
+        'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
+        'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
+        'correct, replace, id, name, description, createdAt, updatedAt';
+      responseOrSocket.setHeader(
+        'Access-Control-Allow-Headers',
+        process.env.ALLOWED_HEADERS
+          ? process.env.ALLOWED_HEADERS
+          : exposedHeaders
+      );
+      responseOrSocket.setHeader(
+        'Access-Control-Expose-Headers',
+        process.env.ALLOWED_HEADERS
+          ? process.env.ALLOWED_HEADERS
+          : exposedHeaders
+      );
+
       if (
-        process.env.CORS_ENABLED?.toLocaleLowerCase() === 'true' ||
-        process.env.ALLOWED_ORIGIN === '*'
+        request.method?.toLowerCase() === 'options' ||
+        request.method?.toLowerCase() === 'option'
       ) {
-        responseOrSocket.setHeader('Access-Control-Allow-Origin', '*');
-        responseOrSocket.setHeader('Access-Control-Allow-Credentials', 'true');
-        responseOrSocket.setHeader(
-          'Access-Control-Allow-Methods',
-          'GET,HEAD,OPTIONS,POST,PUT'
-        );
-        responseOrSocket.setHeader(
-          'Access-Control-Allow-Headers',
-          process.env.ALLOWED_HEADERS
-            ? process.env.ALLOWED_HEADERS
-            : 'Access-Control-Allow-Headers, Origin, Accept, ' +
-                'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
-                'Authorization, authorization, Access-Control-Allow-Origin, ' +
-                'pages, page, pageSize, numberOfPages, pagesize, numberofpages, pageNumber, ' +
-                'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
-                'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
-                'correct, replace, id, name, description, createdAt, updatedAt'
-        );
+        await this.emit(responseOrSocket, operation, 200, {});
+        return true;
       }
-      await this.emit(responseOrSocket, operation, 200, {});
-      return true;
     }
     return false;
   }
