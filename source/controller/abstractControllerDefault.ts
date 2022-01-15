@@ -246,10 +246,6 @@ export default abstract class AbstractControllerDefault extends Default {
     if (requestOrData?.headers) {
       requestOrData.headers.pageSize =
         requestOrData.headers.pageSize || requestOrData.headers.pagesize;
-      requestOrData.headers.pages =
-        requestOrData.headers.pages ||
-        requestOrData.headers.numberOfPages ||
-        requestOrData.headers.numberofpages;
     }
     const event = new Event({
       operation,
@@ -308,12 +304,11 @@ export default abstract class AbstractControllerDefault extends Default {
     if (responseOrSocket.setHeader) {
       const page = (event as any)?.options?.page;
       const pageSize = (event as any)?.options?.pageSize;
-      const numberOfPages = (event as any)?.options?.numberOfPages;
+      const pages = (event as any)?.options?.pages;
 
       if (page) responseOrSocket.setHeader('page', page);
       if (pageSize) responseOrSocket.setHeader('pageSize', pageSize);
-      if (numberOfPages)
-        responseOrSocket.setHeader('numberOfPages', numberOfPages);
+      if (pages) responseOrSocket.setHeader('pages', pages);
     }
   }
 
