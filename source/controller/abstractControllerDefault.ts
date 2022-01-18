@@ -326,7 +326,7 @@ export default abstract class AbstractControllerDefault extends Default {
       responseOrSocket.setHeader('Access-Control-Allow-Credentials', 'true');
       responseOrSocket.setHeader(
         'Access-Control-Allow-Methods',
-        'GET,HEAD,OPTIONS,POST,PUT,PATCH'
+        'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE'
       );
       const exposedHeaders =
         'Access-Control-Allow-Headers, Origin, Accept, ' +
