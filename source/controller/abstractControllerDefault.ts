@@ -329,9 +329,16 @@ export default abstract class AbstractControllerDefault extends Default {
         'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE'
       );
       const exposedHeaders =
-        'Access-Control-Allow-Headers, Origin, Accept, ' +
+        'Access-Control-Allow-Headers, Origin, Accept, accept, :authority, :method, :path, :scheme, ' +
         'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
-        'Authorization, authorization, Access-Control-Allow-Origin, ' +
+        'Authorization, authorization, Access-Control-Allow-Origin, Cache-Control, If-Modified-Since, ' +
+        'Sec-CH-UA-Arch, Sec-CH-UA-Bitness, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, ' +
+        'Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-PlatformSec-CH-UA, Sec-Fetch-Dest, Sec-Fetch-Mode, ' +
+        'Sec-Fetch-Site, Sec-Fetch-User, Sec-WebSocket-Accept, Connection, Content-Disposition, Content-Encoding, ' +
+        'If-None-Match, cache-control, if-modified-since, accept-encoding, accept-language, ' +
+        'If-Match, if-match, If-Range, if-range, If-Unmodified-Since, if-unmodified-since, ' +
+        'Accept-Encoding, Accept-Language, origin, referer, sec-ch-ua, sec-ch-ua-mobile, ' +
+        'sec-ch-ua-platform, sec-fetch-dest, sec-fetch-mode, sec-fetch-site, user-agent, ' +
         'pages, page, pageSize, numberOfPages, pagesize, numberofpages, pageNumber, ' +
         'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
         'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
