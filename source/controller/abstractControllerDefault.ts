@@ -329,7 +329,7 @@ export default abstract class AbstractControllerDefault extends Default {
         'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE'
       );
       const exposedHeaders =
-        'Access-Control-Allow-Headers, Origin, Accept, accept, :authority, :method, :path, :scheme, ' +
+        'Access-Control-Allow-Headers, Origin, Accept, accept, authority, method, path, scheme, ' +
         'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
         'Authorization, authorization, Access-Control-Allow-Origin, Cache-Control, If-Modified-Since, ' +
         'Sec-CH-UA-Arch, Sec-CH-UA-Bitness, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, ' +
