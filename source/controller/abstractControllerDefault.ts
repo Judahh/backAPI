@@ -301,15 +301,19 @@ export default abstract class AbstractControllerDefault extends Default {
   }
 
   protected async generateHeaders(responseOrSocket, event) {
-    if (responseOrSocket.setHeader) {
+    if (responseOrSocket) {
       const page = (event as any)?.options?.page;
       const pageSize = (event as any)?.options?.pageSize;
       const pages = (event as any)?.options?.pages;
 
-      if (page) responseOrSocket.setHeader('page', page);
-      if (pageSize) responseOrSocket.setHeader('pageSize', pageSize);
-      if (pages) responseOrSocket.setHeader('pages', pages);
+      if (page) this.setHeader(responseOrSocket, 'page', page);
+      if (pageSize) this.setHeader(responseOrSocket, 'pageSize', pageSize);
+      if (pages) this.setHeader(responseOrSocket, 'pages', pages);
     }
+  }
+
+  protected async setHeader(responseOrSocket, name: string, value: string) {
+    if (responseOrSocket.setHeader) responseOrSocket.setHeader(name, value);
   }
 
   protected async enableOptions(
@@ -322,9 +326,14 @@ export default abstract class AbstractControllerDefault extends Default {
       process.env.ALLOWED_ORIGIN === '*'
     ) {
       console.log('CORS enabled');
-      responseOrSocket.setHeader('Access-Control-Allow-Origin', '*');
-      responseOrSocket.setHeader('Access-Control-Allow-Credentials', 'true');
-      responseOrSocket.setHeader(
+      this.setHeader(responseOrSocket, 'Access-Control-Allow-Origin', '*');
+      this.setHeader(
+        responseOrSocket,
+        'Access-Control-Allow-Credentials',
+        'true'
+      );
+      this.setHeader(
+        responseOrSocket,
         'Access-Control-Allow-Methods',
         'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE'
       );
@@ -343,13 +352,15 @@ export default abstract class AbstractControllerDefault extends Default {
         'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
         'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
         'correct, replace, id, name, description, createdAt, updatedAt';
-      responseOrSocket.setHeader(
+      this.setHeader(
+        responseOrSocket,
         'Access-Control-Allow-Headers',
         process.env.ALLOWED_HEADERS
           ? process.env.ALLOWED_HEADERS
           : exposedHeaders
       );
-      responseOrSocket.setHeader(
+      this.setHeader(
+        responseOrSocket,
         'Access-Control-Expose-Headers',
         process.env.ALLOWED_HEADERS
           ? process.env.ALLOWED_HEADERS
@@ -367,6 +378,27 @@ export default abstract class AbstractControllerDefault extends Default {
     return false;
   }
 
+  protected getHandshakeHeaders(requestOrData, responseOrSocket) {
+    if (responseOrSocket?.handshake?.headers) {
+      const setHeader = (key, value) => {
+        responseOrSocket.handshake.headers[key] = value;
+      };
+      const removeHeader = (key) => {
+        delete responseOrSocket.handshake.headers[key];
+      };
+      responseOrSocket.headers = responseOrSocket.handshake.headers;
+      requestOrData.headers = responseOrSocket.handshake.headers;
+      responseOrSocket.query = responseOrSocket.handshake.query;
+      requestOrData.query = responseOrSocket.handshake.query;
+      responseOrSocket.auth = responseOrSocket.handshake.auth;
+      requestOrData.auth = responseOrSocket.handshake.auth;
+      responseOrSocket.setHeader = setHeader;
+      responseOrSocket.removeHeader = removeHeader;
+      requestOrData.setHeader = setHeader;
+      requestOrData.removeHeader = removeHeader;
+    }
+  }
+
   protected async generateEvent(
     requestOrData,
     responseOrSocket,
@@ -379,6 +411,7 @@ export default abstract class AbstractControllerDefault extends Default {
     replace?: boolean
   ): Promise<Response | any> {
     try {
+      this.getHandshakeHeaders(requestOrData, responseOrSocket);
       if (
         await this.enableOptions(requestOrData, responseOrSocket, operation)
       ) {
