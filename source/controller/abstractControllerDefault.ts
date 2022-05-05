@@ -225,7 +225,11 @@ export default abstract class AbstractControllerDefault extends Default {
       if (Object.prototype.hasOwnProperty.call(selection, key)) {
         const element = selection[key];
         const newKey = key.split(/[\s,"'=;\-\/\\]+/)[0];
-        selection[newKey] = element;
+        try {
+          selection[newKey] = JSON.parse(element);
+        } catch (error) {
+          selection[newKey] = element;
+        }
         if (key != newKey) {
           selection[key] = undefined;
           delete selection[key];
