@@ -339,7 +339,7 @@ export default abstract class AbstractControllerDefault extends Default {
       this.setHeader(
         responseOrSocket,
         'Access-Control-Allow-Methods',
-        'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE'
+        'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS,OTHER,*'
       );
       const exposedHeaders =
         'Access-Control-Allow-Headers, Origin, Accept, accept, authority, method, path, scheme, ' +
@@ -355,7 +355,7 @@ export default abstract class AbstractControllerDefault extends Default {
         'pages, page, pageSize, numberOfPages, pagesize, numberofpages, pageNumber, ' +
         'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
         'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
-        'correct, replace, id, name, description, createdAt, updatedAt';
+        'correct, replace, id, name, description, createdAt, updatedAt, *';
       this.setHeader(
         responseOrSocket,
         'Access-Control-Allow-Headers',
