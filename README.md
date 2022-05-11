@@ -38,7 +38,7 @@ console.log('store:', store);
 ![Overview](./image/overview.svg)
 
 - Adapter. Adapts the data to controller and from the controller. Adapting to the selected protocol (like rest or websocket).
-- Mid (Middleware). Middleware is a function that is called before the controller is called.
+- Mid (Middlewares). Middleware is a function that is called before the controller is called.
 - Controller. Controller is what is called when the request is sent to the server. And is responsible for handling the request. It is also responsible for sending the response. As well as formatting the returned response and return codes if needed.
 
 ## Adapters
