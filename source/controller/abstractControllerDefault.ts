@@ -80,7 +80,13 @@ export default abstract class AbstractControllerDefault extends Default {
     } catch (error) {
       console.error(error);
       return new Promise(() =>
-        this.generateError(responseOrSocket, error, operation)
+        this.generateError(
+          requestOrData,
+          responseOrSocket,
+          {},
+          error,
+          operation
+        )
       );
     }
   }
