@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 export default interface IControllerRead {
-  read(requestOrData, responseOrSocket): Promise<Response>;
-  index(requestOrData, responseOrSocket): Promise<Response>;
-  show(requestOrData, responseOrSocket): Promise<Response>;
+  read(...args): Promise<Response>;
+  index(...args): Promise<Response>;
+  show(...args): Promise<Response>;
 }
