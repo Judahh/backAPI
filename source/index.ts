@@ -15,12 +15,18 @@ import AbstractControllerHead from './controller/abstractControllerHead';
 import AbstractControllerRead from './controller/abstractControllerRead';
 import AbstractControllerTrace from './controller/abstractControllerTrace';
 import AbstractControllerUpdate from './controller/abstractControllerUpdate';
+import AllArgs from './controller/args/all';
+import RestArgs from './controller/args/rest';
+import SocketArgs from './controller/args/socket';
 import DatabaseHandler from './database/databaseHandler';
 import IDatabaseHandler from './database/iDatabaseHandler';
 import MissingMethodError from './error/missingMethodError';
 import IRouter from './router/iRouter';
 
 export {
+  AllArgs,
+  RestArgs,
+  SocketArgs,
   DatabaseHandler,
   MissingMethodError,
   AbstractControllerDefault,
