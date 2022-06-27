@@ -57,21 +57,15 @@ export default abstract class AbstractControllerDefault extends Default {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected middlewares?: any[];
   async mainRequestHandler(args, operation?: Operation): Promise<Response> {
-    const { requestOrData, responseOrSocket, server, context } =
-      this.parseArgs(args);
+    const { requestOrData, responseOrSocket } = this.parseArgs(args);
     try {
-      if (context) this.context = context;
       let response;
       if (
         requestOrData.method &&
         this.method[requestOrData.method] &&
         this[this.method[requestOrData.method]]
       ) {
-        response = await this[this.method[requestOrData.method]](
-          requestOrData,
-          responseOrSocket,
-          server
-        );
+        response = await this[this.method[requestOrData.method]](...args);
       } else {
         const error = new Error('Missing HTTP method.');
         throw error;
@@ -517,7 +511,7 @@ export default abstract class AbstractControllerDefault extends Default {
       case 'next':
         return this.parseNextArgs(args);
 
-      case 'next':
+      case 'aws':
         return this.parseAWSArgs(args);
 
       default:
@@ -578,8 +572,7 @@ export default abstract class AbstractControllerDefault extends Default {
   }
 
   protected async generateEvent(
-    requestOrData,
-    responseOrSocket,
+    args,
     operation: Operation,
     useFunction: (
       // eslint-disable-next-line no-unused-vars
@@ -588,8 +581,12 @@ export default abstract class AbstractControllerDefault extends Default {
     singleDefault?: boolean,
     replace?: boolean
   ): Promise<Response | any> {
+    const { requestOrData, responseOrSocket, context, server } =
+      this.parseArgs(args);
     let headers: any = {};
     try {
+      if (server) this.server = server;
+      if (context) this.context = context;
       this.getHandshakeHeaders(requestOrData, responseOrSocket);
       if (
         await this.enableOptions(
@@ -635,12 +632,7 @@ export default abstract class AbstractControllerDefault extends Default {
     }
   }
 
-  async options(requestOrData, responseOrSocket): Promise<Response> {
-    return this.generateEvent(
-      requestOrData,
-      responseOrSocket,
-      Operation.other,
-      this.event.bind(this)
-    );
+  async options(...args): Promise<Response> {
+    return this.generateEvent(args, Operation.other, this.event.bind(this));
   }
 }

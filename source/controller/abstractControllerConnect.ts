@@ -9,13 +9,7 @@ export default abstract class AbstractControllerConnect
   extends AbstractControllerDefault
   implements IControllerConnect
 {
-  async connect(requestOrData, responseOrSocket, server?): Promise<Response> {
-    this.server = server;
-    return this.generateEvent(
-      requestOrData,
-      responseOrSocket,
-      Operation.other,
-      this.event.bind(this)
-    );
+  async connect(...args): Promise<Response> {
+    return this.generateEvent(args, Operation.other, this.event.bind(this));
   }
 }
