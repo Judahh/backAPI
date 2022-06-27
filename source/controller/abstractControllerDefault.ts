@@ -10,10 +10,17 @@ import { Handler, Event, Operation } from 'flexiblepersistence';
 import IRouter from '../router/iRouter';
 import MissingMethodError from '../error/missingMethodError';
 import { settings } from 'ts-mixer';
+import RestArgs from './args/rest';
+import SocketArgs from './args/socket';
+import AllArgs from './args/all';
 settings.initFunction = 'init';
 
 export default abstract class AbstractControllerDefault extends Default {
   protected server;
+  protected context;
+  protected abstract restFramework;
+  protected abstract socketFramework;
+  protected abstract communication;
   protected regularErrorStatus: {
     [error: string]: number;
   } = {
@@ -49,23 +56,23 @@ export default abstract class AbstractControllerDefault extends Default {
   protected handler: Handler | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected middlewares?: any[];
-  async mainRequestHandler(
-    requestOrData: Request | any,
-    responseOrSocket: Response | any,
-    operation?: Operation
-  ): Promise<Response> {
+  async mainRequestHandler(args, operation?: Operation): Promise<Response> {
+    const { requestOrData, responseOrSocket, server, context } =
+      this.parseArgs(args);
     try {
+      if (context) this.context = context;
       let response;
       if (
         requestOrData.method &&
         this.method[requestOrData.method] &&
         this[this.method[requestOrData.method]]
-      )
+      ) {
         response = await this[this.method[requestOrData.method]](
           requestOrData,
-          responseOrSocket
+          responseOrSocket,
+          server
         );
-      else {
+      } else {
         const error = new Error('Missing HTTP method.');
         throw error;
       }
@@ -137,15 +144,19 @@ export default abstract class AbstractControllerDefault extends Default {
   }
 
   protected abstract emit(
+    requestOrData?,
     responseOrSocket?,
+    headers?,
     operation?: Operation,
     status?,
     object?
   ): Promise<void>;
 
   protected async generateError(
-    responseOrSocket,
-    error,
+    requestOrData?,
+    responseOrSocket?,
+    headers?,
+    error?,
     operation?: Operation
   ) {
     if (error === undefined) error = new MissingMethodError();
@@ -160,7 +171,14 @@ export default abstract class AbstractControllerDefault extends Default {
     } else {
       status = this.errorStatus(error.name) as number;
     }
-    await this.emit(responseOrSocket, operation, status, object);
+    await this.emit(
+      requestOrData,
+      responseOrSocket,
+      headers,
+      operation,
+      status,
+      object
+    );
     return responseOrSocket;
   }
 
@@ -304,25 +322,53 @@ export default abstract class AbstractControllerDefault extends Default {
     return this.setObject({}, (await useFunction(event))['receivedItem']);
   }
 
-  protected async generateHeaders(responseOrSocket, event) {
+  protected async generateHeaders(requestOrData, responseOrSocket, event) {
+    let headers = {};
+    const page = (event as any)?.options?.page;
+    const pageSize = (event as any)?.options?.pageSize;
+    const pages = (event as any)?.options?.pages;
     if (responseOrSocket) {
-      const page = (event as any)?.options?.page;
-      const pageSize = (event as any)?.options?.pageSize;
-      const pages = (event as any)?.options?.pages;
-
-      if (page) this.setHeader(responseOrSocket, 'page', page);
-      if (pageSize) this.setHeader(responseOrSocket, 'pageSize', pageSize);
-      if (pages) this.setHeader(responseOrSocket, 'pages', pages);
+      if (page)
+        headers = {
+          ...headers,
+          ...this.setHeader(requestOrData, responseOrSocket, 'page', page),
+        };
+      if (pageSize)
+        headers = {
+          ...headers,
+          ...this.setHeader(
+            requestOrData,
+            responseOrSocket,
+            'pageSize',
+            pageSize
+          ),
+        };
+      if (pages)
+        headers = {
+          ...headers,
+          ...this.setHeader(requestOrData, responseOrSocket, 'pages', pages),
+        };
     }
+    return headers;
   }
 
-  protected async setHeader(responseOrSocket, name: string, value: string) {
+  protected async setHeader(
+    requestOrData,
+    responseOrSocket,
+    name: string,
+    value: string
+  ) {
     if (responseOrSocket.setHeader) responseOrSocket.setHeader(name, value);
+    if (requestOrData.setHeader) requestOrData.setHeader(name, value);
+    const HeaderFragment = {};
+    HeaderFragment[name] = value;
+    return HeaderFragment;
   }
 
   protected async enableOptions(
-    request: { method?: string },
+    requestOrData,
     responseOrSocket,
+    headers,
     operation: Operation
   ): Promise<boolean> {
     if (
@@ -330,17 +376,33 @@ export default abstract class AbstractControllerDefault extends Default {
       process.env.ALLOWED_ORIGIN === '*'
     ) {
       console.log('CORS enabled');
-      this.setHeader(responseOrSocket, 'Access-Control-Allow-Origin', '*');
-      this.setHeader(
-        responseOrSocket,
-        'Access-Control-Allow-Credentials',
-        'true'
-      );
-      this.setHeader(
-        responseOrSocket,
-        'Access-Control-Allow-Methods',
-        'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS,OTHER,*'
-      );
+      headers = {
+        ...headers,
+        ...this.setHeader(
+          requestOrData,
+          responseOrSocket,
+          'Access-Control-Allow-Origin',
+          '*'
+        ),
+      };
+      headers = {
+        ...headers,
+        ...this.setHeader(
+          requestOrData,
+          responseOrSocket,
+          'Access-Control-Allow-Credentials',
+          'true'
+        ),
+      };
+      headers = {
+        ...headers,
+        ...this.setHeader(
+          requestOrData,
+          responseOrSocket,
+          'Access-Control-Allow-Methods',
+          'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS,OTHER,*'
+        ),
+      };
       const exposedHeaders =
         'Access-Control-Allow-Headers, Origin, Accept, accept, authority, method, path, scheme, ' +
         'X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, ' +
@@ -356,26 +418,41 @@ export default abstract class AbstractControllerDefault extends Default {
         'pagenumber, type, token, filter, single, sort, sortBy, sortByDesc, ' +
         'sortByDescending, sortByAsc, sortByAscending, sortByDescending, ' +
         'correct, replace, id, name, description, createdAt, updatedAt, *';
-      this.setHeader(
-        responseOrSocket,
-        'Access-Control-Allow-Headers',
-        process.env.ALLOWED_HEADERS
-          ? process.env.ALLOWED_HEADERS
-          : exposedHeaders
-      );
-      this.setHeader(
-        responseOrSocket,
-        'Access-Control-Expose-Headers',
-        process.env.ALLOWED_HEADERS
-          ? process.env.ALLOWED_HEADERS
-          : exposedHeaders
-      );
+      headers = {
+        ...headers,
+        ...this.setHeader(
+          requestOrData,
+          responseOrSocket,
+          'Access-Control-Allow-Headers',
+          process.env.ALLOWED_HEADERS
+            ? process.env.ALLOWED_HEADERS
+            : exposedHeaders
+        ),
+      };
+      headers = {
+        ...headers,
+        ...this.setHeader(
+          requestOrData,
+          responseOrSocket,
+          'Access-Control-Expose-Headers',
+          process.env.ALLOWED_HEADERS
+            ? process.env.ALLOWED_HEADERS
+            : exposedHeaders
+        ),
+      };
 
       if (
-        request.method?.toLowerCase() === 'options' ||
-        request.method?.toLowerCase() === 'option'
+        requestOrData.method?.toLowerCase() === 'options' ||
+        requestOrData.method?.toLowerCase() === 'option'
       ) {
-        await this.emit(responseOrSocket, operation, 200, {});
+        await this.emit(
+          requestOrData,
+          responseOrSocket,
+          headers,
+          operation,
+          200,
+          {}
+        );
         return true;
       }
     }
@@ -403,6 +480,97 @@ export default abstract class AbstractControllerDefault extends Default {
     }
   }
 
+  protected parseExpressArgs(args): RestArgs {
+    return {
+      request: args[0],
+      response: args[1],
+    };
+  }
+
+  protected parseNextArgs(args): RestArgs {
+    return {
+      request: args[0],
+      response: args[1],
+    };
+  }
+
+  protected parseAWSArgs(args): RestArgs {
+    args[0].method = args[0].httpMethod;
+    args[0].params = args[0].queryStringParameters;
+    return {
+      request: args[0],
+      context: args[1],
+    };
+  }
+
+  protected parseRestArgs(args): RestArgs {
+    switch (this.restFramework) {
+      case 'express':
+        return this.parseExpressArgs(args);
+
+      case 'next':
+        return this.parseNextArgs(args);
+
+      case 'next':
+        return this.parseAWSArgs(args);
+
+      default:
+        return this.parseNextArgs(args);
+    }
+  }
+
+  protected parseWebArgs(args): SocketArgs {
+    return {
+      data: args[0],
+      socket: args[1],
+      server: args[2],
+    };
+  }
+
+  protected parseIoArgs(args): SocketArgs {
+    return {
+      data: args[0],
+      socket: args[1],
+      server: args[2],
+    };
+  }
+
+  protected parseSocketArgs(args): SocketArgs {
+    switch (this.socketFramework) {
+      case 'web':
+        return this.parseWebArgs(args);
+
+      case 'io':
+        return this.parseIoArgs(args);
+
+      default:
+        return this.parseIoArgs(args);
+    }
+  }
+
+  protected parseArgs(args): AllArgs {
+    let newArgs;
+    switch (this.communication) {
+      case 'rest':
+        newArgs = this.parseRestArgs(args);
+        break;
+
+      case 'socket':
+        newArgs = this.parseSocketArgs(args);
+        break;
+
+      default:
+        newArgs = this.parseRestArgs(args);
+        break;
+    }
+    return {
+      requestOrData: newArgs.request || newArgs.data,
+      responseOrSocket: newArgs.response || newArgs.socket,
+      server: newArgs.server,
+      context: newArgs.context,
+    };
+  }
+
   protected async generateEvent(
     requestOrData,
     responseOrSocket,
@@ -414,10 +582,16 @@ export default abstract class AbstractControllerDefault extends Default {
     singleDefault?: boolean,
     replace?: boolean
   ): Promise<Response | any> {
+    let headers: any = {};
     try {
       this.getHandshakeHeaders(requestOrData, responseOrSocket);
       if (
-        await this.enableOptions(requestOrData, responseOrSocket, operation)
+        await this.enableOptions(
+          requestOrData,
+          responseOrSocket,
+          headers,
+          operation
+        )
       ) {
         return responseOrSocket;
       }
@@ -430,12 +604,28 @@ export default abstract class AbstractControllerDefault extends Default {
       await this.runMiddlewares(requestOrData, responseOrSocket);
       const object = await this.generateObject(useFunction, event);
       const status = this.generateStatus(operation, object);
-      await this.generateHeaders(responseOrSocket, event);
-      await this.emit(responseOrSocket, operation, status, object);
+      headers = {
+        ...headers,
+        ...(await this.generateHeaders(requestOrData, responseOrSocket, event)),
+      };
+      await this.emit(
+        requestOrData,
+        responseOrSocket,
+        headers,
+        operation,
+        status,
+        object
+      );
       return responseOrSocket;
     } catch (error) {
       console.error(error);
-      return this.generateError(responseOrSocket, error, operation);
+      return this.generateError(
+        requestOrData,
+        responseOrSocket,
+        headers,
+        error,
+        operation
+      );
     }
   }
 
