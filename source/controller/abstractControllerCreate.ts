@@ -9,7 +9,7 @@ export default class AbstractControllerCreate
   implements IControllerCreate
 {
   // @ts-ignore
-  async create(args): Promise<Response> {
+  async create(...args): Promise<Response> {
     return this.generateEvent(
       args,
       Operation.create,

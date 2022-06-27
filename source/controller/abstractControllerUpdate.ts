@@ -6,10 +6,10 @@ export default abstract class AbstractControllerUpdate
   extends AbstractControllerDefault
   implements IControllerUpdate
 {
-  async update(args): Promise<Response> {
+  async update(...args): Promise<Response> {
     return this.generateEvent(args, Operation.update, this.event.bind(this));
   }
-  async replaceUpdate(args): Promise<Response> {
+  async replaceUpdate(...args): Promise<Response> {
     return this.generateEvent(
       args,
       Operation.update,

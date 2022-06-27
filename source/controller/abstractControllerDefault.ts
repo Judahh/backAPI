@@ -57,7 +57,7 @@ export default abstract class AbstractControllerDefault extends Default {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected middlewares?: any[];
   async mainRequestHandler(args, operation?: Operation): Promise<Response> {
-    const { requestOrData, responseOrSocket, server } = this.parseArgs(args);
+    const { requestOrData, responseOrSocket } = this.parseArgs(args);
     try {
       let response;
       if (
@@ -65,7 +65,7 @@ export default abstract class AbstractControllerDefault extends Default {
         this.method[requestOrData.method] &&
         this[this.method[requestOrData.method]]
       ) {
-        response = await this[this.method[requestOrData.method]](args);
+        response = await this[this.method[requestOrData.method]](...args);
       } else {
         const error = new Error('Missing HTTP method.');
         throw error;
@@ -632,7 +632,7 @@ export default abstract class AbstractControllerDefault extends Default {
     }
   }
 
-  async options(args): Promise<Response> {
+  async options(...args): Promise<Response> {
     return this.generateEvent(args, Operation.other, this.event.bind(this));
   }
 }

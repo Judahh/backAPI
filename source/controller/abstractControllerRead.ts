@@ -7,17 +7,17 @@ export default abstract class AbstractControllerRead
   extends AbstractControllerDefault
   implements IControllerRead
 {
-  async read(args): Promise<Response> {
+  async read(...args): Promise<Response> {
     const { requestOrData } = this.parseArgs(args);
     if (
       Object.keys(requestOrData['query']).length !== 0 &&
       requestOrData['query'].id
     )
-      return this.index(args);
-    return this.show(args);
+      return this.index(...args);
+    return this.show(...args);
   }
 
-  async index(args): Promise<Response> {
+  async index(...args): Promise<Response> {
     return this.generateEvent(
       args,
       Operation.read,
@@ -26,7 +26,7 @@ export default abstract class AbstractControllerRead
     );
   }
 
-  async show(args): Promise<Response> {
+  async show(...args): Promise<Response> {
     return this.generateEvent(
       args,
       Operation.read,
