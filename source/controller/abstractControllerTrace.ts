@@ -6,12 +6,7 @@ export default abstract class AbstractControllerTrace
   extends AbstractControllerDefault
   implements IControllerTrace
 {
-  async trace(requestOrData, responseOrSocket): Promise<Response> {
-    return this.generateEvent(
-      requestOrData,
-      responseOrSocket,
-      Operation.other,
-      this.event.bind(this)
-    );
+  async trace(args): Promise<Response> {
+    return this.generateEvent(args, Operation.other, this.event.bind(this));
   }
 }

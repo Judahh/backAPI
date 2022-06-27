@@ -7,12 +7,7 @@ export default class AbstractControllerDelete
   extends AbstractControllerDefault
   implements IControllerDelete
 {
-  async delete(requestOrData, responseOrSocket): Promise<Response> {
-    return this.generateEvent(
-      requestOrData,
-      responseOrSocket,
-      Operation.delete,
-      this.event.bind(this)
-    );
+  async delete(args): Promise<Response> {
+    return this.generateEvent(args, Operation.delete, this.event.bind(this));
   }
 }
