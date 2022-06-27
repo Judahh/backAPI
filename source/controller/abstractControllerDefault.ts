@@ -632,7 +632,7 @@ export default abstract class AbstractControllerDefault extends Default {
     }
   }
 
-  async options(...args): Promise<Response> {
+  async options(args): Promise<Response> {
     return this.generateEvent(args, Operation.other, this.event.bind(this));
   }
 }
