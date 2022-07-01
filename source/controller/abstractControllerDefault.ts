@@ -500,6 +500,7 @@ export default abstract class AbstractControllerDefault extends Default {
     return {
       request: args[0],
       context: args[1],
+      response: {},
     };
   }
 
