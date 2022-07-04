@@ -536,6 +536,7 @@ export default abstract class AbstractControllerDefault extends Default {
 
   protected parseAWSArgs(args): RestArgs {
     const request = args[0];
+    const response = args[1];
     const callback = args[2];
 
     request.method = request.httpMethod;
@@ -546,12 +547,10 @@ export default abstract class AbstractControllerDefault extends Default {
       request.body = request.body;
     }
 
-    const response = {
-      send: (object?: { headers?: any; body?: any; status?: number }) => {
-        // @ts-ignore
-        if (object) object.statusCode = object?.status;
-        return callback(null, object);
-      },
+    response.send = (object) => {
+      if (object) object.statusCode = object?.status;
+      callback.bind(response)(null, object);
+      return response;
     };
 
     return {
