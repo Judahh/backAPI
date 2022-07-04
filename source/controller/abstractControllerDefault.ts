@@ -481,26 +481,83 @@ export default abstract class AbstractControllerDefault extends Default {
   }
 
   protected parseExpressArgs(args): RestArgs {
+    const request = args[0];
+    const response = args[1];
+
+    if (request.path === undefined) request.path = request?.route?.path;
+
+    const send = (object?: { headers?: any; body?: any; status?: number }) => {
+      request.headers = object?.headers;
+      args[1].headers = object?.headers;
+      if (args[1]?.setHeader)
+        for (const key in object?.headers) {
+          if (Object.prototype.hasOwnProperty.call(object?.headers, key)) {
+            const header = object?.headers[key];
+            args[1]?.setHeader(key, header);
+          }
+        }
+      return args[1].status(object?.status).json(object?.body);
+    };
+
+    response.send = send;
+
     return {
-      request: args[0],
-      response: args[1],
+      request: request,
+      response: response,
     };
   }
 
   protected parseNextArgs(args): RestArgs {
+    const request = args[0];
+    const response = args[1];
+
+    if (request.path === undefined)
+      request.path = request?.url?.split('?')?.[0];
+
+    const send = (object?: { headers?: any; body?: any; status?: number }) => {
+      request.headers = object?.headers;
+      args[1].headers = object?.headers;
+      if (args[1]?.setHeader)
+        for (const key in object?.headers) {
+          if (Object.prototype.hasOwnProperty.call(object?.headers, key)) {
+            const header = object?.headers[key];
+            args[1]?.setHeader(key, header);
+          }
+        }
+      return args[1].status(object?.status).json(object?.body);
+    };
+
+    response.send = send;
     return {
-      request: args[0],
-      response: args[1],
+      request: request,
+      response: response,
     };
   }
 
   protected parseAWSArgs(args): RestArgs {
-    args[0].method = args[0].httpMethod;
-    args[0].params = args[0].queryStringParameters;
+    const request = args[0];
+    const callback = args[2];
+
+    request.method = request.httpMethod;
+    request.query = request.queryStringParameters;
+    try {
+      request.body = JSON.parse(request.body as string | '{}');
+    } catch (error) {
+      request.body = request.body;
+    }
+
+    const response = {
+      send: (object?: { headers?: any; body?: any; status?: number }) => {
+        // @ts-ignore
+        if (object) object.statusCode = object?.status;
+        return callback(null, object);
+      },
+    };
+
     return {
-      request: args[0],
+      request: request,
+      response: response,
       context: args[1],
-      response: {},
     };
   }
 
