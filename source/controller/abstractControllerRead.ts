@@ -9,11 +9,7 @@ export default abstract class AbstractControllerRead
 {
   async read(...args): Promise<Response> {
     const { requestOrData } = this.parseArgs(args);
-    if (
-      Object.keys(requestOrData['query']).length !== 0 &&
-      requestOrData['query'].id
-    )
-      return this.index(...args);
+    if (requestOrData?.['query']?.id) return this.index(...args);
     return this.show(...args);
   }
 
