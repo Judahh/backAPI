@@ -552,9 +552,26 @@ export default abstract class AbstractControllerDefault extends Default {
     }
 
     response.sendResponse = (object) => {
-      if (object) object.statusCode = object?.status;
-      callback.bind(response)(null, object);
+      const newObject = JSON.parse(JSON.stringify(object));
+      response.currentHeaders = {
+        ...newObject.headers,
+        ...response.currentHeaders,
+      };
+      newObject.headers = response.currentHeaders;
+      if (newObject) newObject.statusCode = newObject?.status;
+      delete newObject?.status;
+      callback.bind(response)(null, newObject);
       return response;
+    };
+
+    response.setHeader = (name, value) => {
+      response.currentHeaders[name] = value;
+      return value;
+    };
+
+    response.removeHeader = (name, value) => {
+      delete response.currentHeaders[name];
+      return value;
     };
 
     return {
