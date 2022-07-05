@@ -486,7 +486,11 @@ export default abstract class AbstractControllerDefault extends Default {
 
     if (request.path === undefined) request.path = request?.route?.path;
 
-    const send = (object?: { headers?: any; body?: any; status?: number }) => {
+    response.sendResponse = (object?: {
+      headers?: any;
+      body?: any;
+      status?: number;
+    }) => {
       request.headers = object?.headers;
       args[1].headers = object?.headers;
       if (args[1]?.setHeader)
@@ -498,8 +502,6 @@ export default abstract class AbstractControllerDefault extends Default {
         }
       return args[1].status(object?.status).json(object?.body);
     };
-
-    response.send = send;
 
     return {
       request: request,
@@ -514,7 +516,11 @@ export default abstract class AbstractControllerDefault extends Default {
     if (request.path === undefined)
       request.path = request?.url?.split('?')?.[0];
 
-    const send = (object?: { headers?: any; body?: any; status?: number }) => {
+    response.sendResponse = (object?: {
+      headers?: any;
+      body?: any;
+      status?: number;
+    }) => {
       request.headers = object?.headers;
       args[1].headers = object?.headers;
       if (args[1]?.setHeader)
@@ -526,8 +532,6 @@ export default abstract class AbstractControllerDefault extends Default {
         }
       return args[1].status(object?.status).json(object?.body);
     };
-
-    response.send = send;
     return {
       request: request,
       response: response,
@@ -547,7 +551,7 @@ export default abstract class AbstractControllerDefault extends Default {
       request.body = request.body;
     }
 
-    response.send = (object) => {
+    response.sendResponse = (object) => {
       if (object) object.statusCode = object?.status;
       callback.bind(response)(null, object);
       return response;
