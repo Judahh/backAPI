@@ -538,46 +538,57 @@ export default abstract class AbstractControllerDefault extends Default {
     };
   }
 
+  protected parseAWSBody(received?: unknown | string): unknown{
+    try {
+      return JSON.parse(received as string | '{}');
+    } catch (error) {
+      return received;
+    }
+  }
+
   protected parseAWSArgs(args): RestArgs {
-    const request = args[0];
-    const response = args[1];
+    const event = args[0];
+    const context = args[1];
     const callback = args[2];
 
-    request.method = request.httpMethod;
-    request.query = request.queryStringParameters;
-    try {
-      request.body = JSON.parse(request.body as string | '{}');
-    } catch (error) {
-      request.body = request.body;
-    }
-
-    response.sendResponse = (object) => {
-      const newObject = JSON.parse(JSON.stringify(object));
-      response.currentHeaders = {
-        ...newObject.headers,
-        ...response.currentHeaders,
-      };
-      newObject.headers = response.currentHeaders;
-      if (newObject) newObject.statusCode = newObject?.status;
-      delete newObject?.status;
-      callback.bind(response)(null, newObject);
-      return response;
+    const request = {
+      ...event,
+      method: event.httpMethod,
+      query: event.queryStringParameters,
+      request: this.parseAWSBody(event.body),
     };
 
-    response.setHeader = (name, value) => {
-      response.currentHeaders[name] = value;
-      return value;
-    };
-
-    response.removeHeader = (name, value) => {
-      delete response.currentHeaders[name];
-      return value;
+    const response = {
+      currentHeaders: {},
+      headers: {},
+      sendResponse: (object) => {
+        const newObject = JSON.parse(JSON.stringify(object));
+        response.currentHeaders = {
+          ...newObject.headers,
+          ...response.currentHeaders,
+        };
+        newObject.headers = response.currentHeaders;
+        if (newObject) newObject.statusCode = newObject?.status;
+        delete newObject?.status;
+        callback.bind(response)(null, newObject);
+        return response;
+      },
+      setHeader: (name, value) => {
+        response.currentHeaders[name] = value;
+        return value;
+      },
+      removeHeader: (name, value) => {
+        delete response.currentHeaders[name];
+        return value;
+      },
     };
 
     return {
+      event: event,
       request: request,
       response: response,
-      context: args[1],
+      context: context,
+      callback: callback,
     };
   }
 
