@@ -559,6 +559,7 @@ export default abstract class AbstractControllerDefault extends Default {
     };
 
     const response = {
+      ...context,
       currentHeaders: {},
       headers: {},
       sendResponse: (object) => {
