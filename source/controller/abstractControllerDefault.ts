@@ -538,7 +538,7 @@ export default abstract class AbstractControllerDefault extends Default {
     };
   }
 
-  protected parseAWSBody(received?: unknown | string): unknown{
+  protected parseAWSBody(received?: unknown | string): unknown {
     try {
       return JSON.parse(received as string | '{}');
     } catch (error) {
@@ -571,6 +571,7 @@ export default abstract class AbstractControllerDefault extends Default {
         newObject.headers = response.currentHeaders;
         if (newObject) newObject.statusCode = newObject?.status;
         delete newObject?.status;
+        response.body = newObject.body;
         callback.bind(response)(null, newObject);
         return response;
       },
