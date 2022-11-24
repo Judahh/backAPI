@@ -43,7 +43,7 @@ console.log('store:', store);
 
 ## Quick Start:
 ```bash
-npx tmplr judahh/templateAPI
+$ npx tmplr judahh/templateAPI
 ```
 
 ## Adapters
