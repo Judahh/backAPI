@@ -41,6 +41,11 @@ console.log('store:', store);
 - Mid (Middlewares). Middleware is a function that is called before the controller is called. It's possible to use more than one middleware.
 - Controller. Controller is what is called when the request is sent to the server. And is responsible for handling the request. It is also responsible for sending the response. As well as formatting the returned response and return codes if needed.
 
+## Quick Start:
+```bash
+npx tmplr judahh/templateAPI
+```
+
 ## Adapters
 
 - [REST](https://github.com/Judahh/backAPIRest)
