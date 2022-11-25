@@ -60,14 +60,13 @@ export default abstract class AbstractControllerDefault extends Default {
     const { requestOrData, responseOrSocket } = this.parseArgs(args);
     try {
       let response;
-      if (
-        requestOrData.method &&
-        this.method[requestOrData.method] &&
-        this[this.method[requestOrData.method]]
-      ) {
-        response = await this[this.method[requestOrData.method]](...args);
+      const method = requestOrData.method
+        ? requestOrData.method.toLowerCase()
+        : undefined;
+      if (method && this.method[method] && this[this.method[method]]) {
+        response = await this[this.method[method]](...args);
       } else {
-        const error = new Error('Missing HTTP method.');
+        const error = new Error('Missing HTTP method:' + method);
         throw error;
       }
       return response;
@@ -375,6 +374,9 @@ export default abstract class AbstractControllerDefault extends Default {
       process.env.CORS_ENABLED?.toLocaleLowerCase() === 'true' ||
       process.env.ALLOWED_ORIGIN === '*'
     ) {
+      const method = requestOrData.method
+        ? requestOrData.method?.toLowerCase()
+        : undefined;
       console.log('CORS enabled');
       headers = {
         ...headers,
@@ -441,10 +443,7 @@ export default abstract class AbstractControllerDefault extends Default {
         ),
       };
 
-      if (
-        requestOrData.method?.toLowerCase() === 'options' ||
-        requestOrData.method?.toLowerCase() === 'option'
-      ) {
+      if (method === 'options' || method === 'option') {
         await this.emit(
           requestOrData,
           responseOrSocket,
