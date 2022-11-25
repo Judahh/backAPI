@@ -50,6 +50,15 @@ export default abstract class AbstractControllerDefault extends Default {
     CONNECT: 'connect',
     HEAD: 'head',
     TRACE: 'trace',
+    post: 'create',
+    get: 'read',
+    patch: 'update',
+    put: 'replaceUpdate',
+    delete: 'delete',
+    options: 'options',
+    connect: 'connect',
+    head: 'head',
+    trace: 'trace',
   };
 
   // @ts-ignore
@@ -61,12 +70,13 @@ export default abstract class AbstractControllerDefault extends Default {
     try {
       let response;
       const method = requestOrData.method
-        ? requestOrData.method.toLowerCase()
+        ? requestOrData.method.toUpperCase()
         : undefined;
       if (method && this.method[method] && this[this.method[method]]) {
         response = await this[this.method[method]](...args);
       } else {
         const error = new Error('Missing HTTP method:' + method);
+        // console.log(requestOrData);
         throw error;
       }
       return response;
