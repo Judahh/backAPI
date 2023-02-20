@@ -1074,10 +1074,10 @@
     pg latest
     sequelize latest
 
-"@flexiblepersistence/service@latest":
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/@flexiblepersistence/service/-/service-2.0.9.tgz#3f18793d3af8b35af2a92849749ee53567ad8c6b"
-  integrity sha512-rAwYEvdrvZ0HVArb3Sqe0BdUr+VmqIvWzaq3TtF8we6tBGNC/rSa8gmd3jUrBCQ0lbcQFDZJlrFDF2ACLi98hg==
+"@flexiblepersistence/service@2.0.10":
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/@flexiblepersistence/service/-/service-2.0.10.tgz#4ea1d85228a42b9ce9eefa7b503f72b894ac9c08"
+  integrity sha512-C5WjuylkLVzQlCn0lAMzqOtvXJDGJQl1DlK3kucm/bNTpr3pJbZgAsmXvWCJGsk5vopyutBeH/SS93DAy9D6og==
   dependencies:
     journaly latest
 

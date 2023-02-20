@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@flexiblepersistence/default-initializer": "latest",
-    "@flexiblepersistence/service": "latest",
+    "@flexiblepersistence/service": "2.0.10",
     "flexiblepersistence": "latest",
     "ts-mixer": "latest",
     "journaly": "latest"
