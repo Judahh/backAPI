@@ -255,7 +255,15 @@ export default abstract class AbstractControllerDefault extends Default {
         try {
           selection[newKey] = JSON.parse(element);
         } catch (error) {
-          selection[newKey] = element;
+          if (Array.isArray(element))
+            selection[newKey] = element.map((e) => {
+              try {
+                return JSON.parse(e);
+              } catch (error) {
+                return e;
+              }
+            });
+          else selection[newKey] = element;
         }
         if (key != newKey) {
           selection[key] = undefined;
